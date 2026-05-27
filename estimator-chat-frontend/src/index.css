@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #f7f1e6;
+  --bg-strong: #fdf9f2;
+  --ink: #1b1a1d;
+  --ink-soft: #5b5457;
+  --line: #e3d7c9;
+  --panel: #fff5e9;
+  --panel-strong: #ffffff;
+  --accent: #1f6b66;
+  --accent-strong: #0f4f4b;
+  --accent-soft: #e4f1ee;
+  --accent-line: #b7d9d4;
+  --warn: #d45b45;
+  --shadow: 0 30px 70px rgba(25, 20, 15, 0.12);
+  --shadow-soft: 0 18px 40px rgba(25, 20, 15, 0.08);
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --heading: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --body: 'Instrument Sans', 'Segoe UI', sans-serif;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  font-family: var(--body);
+  color: var(--ink);
+  background: radial-gradient(
+      1200px 520px at 12% -10%,
+      rgba(31, 107, 102, 0.16),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 500px at 90% 6%,
+      rgba(240, 143, 111, 0.18),
+      transparent 55%
+    ),
+    linear-gradient(180deg, #fbf6ee 0%, #f7f1e6 60%, #f1eadf 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(27, 26, 29, 0.04) 0,
+    rgba(27, 26, 29, 0.04) 1px,
+    transparent 1px,
+    transparent 120px
+  );
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+p {
+  margin: 0;
+}
+
+textarea,
+button {
+  font-family: inherit;
+}
+
+@media (max-width: 720px) {
+  #root {
+    padding: 20px;
+  }
+}
