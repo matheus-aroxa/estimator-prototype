@@ -10,6 +10,7 @@ interface ChatMessage {
   role: Role
   content: string
   status?: MessageStatus
+  type?: 'text' | 'estimate'
 }
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? ''
@@ -23,6 +24,44 @@ const buildUrl = (description: string) => {
 }
 
 const createId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`
+
+function EstimateDisplay({ content }: { content: string }) {
+  try {
+    const data = JSON.parse(content)
+    return (
+      <div className="estimate-result">
+        <div className="estimate-summary">
+          <div className="estimate-value">
+            <strong>{data.estimatedHoursToCompleteTheTask}h</strong>
+            <span>Estimativa</span>
+          </div>
+          <div className="estimate-confidence">
+            <strong>{data.confidenceRateInTheEstimatedHours}/10</strong>
+            <span>Confiança</span>
+          </div>
+        </div>
+        
+        <div className="estimate-justification">
+          <h4>Justificativa</h4>
+          <p>{data.justification}</p>
+        </div>
+
+        {data.riskFactorsThatMayAffectTheTimeToCompleteTheTask?.length > 0 && (
+          <div className="estimate-risks">
+            <h4>Fatores de Risco</h4>
+            <ul>
+              {data.riskFactorsThatMayAffectTheTimeToCompleteTheTask.map((risk: string, i: number) => (
+                <li key={i}>{risk}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    )
+  } catch {
+    return <p>{content}</p>
+  }
+}
 
 function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -76,6 +115,16 @@ function App() {
         throw new Error(text || 'Falha ao consultar a API.')
       }
 
+      let isEstimate = false
+      try {
+        const parsed = JSON.parse(text)
+        if (parsed.estimatedHoursToCompleteTheTask !== undefined) {
+          isEstimate = true
+        }
+      } catch {
+        // Not a JSON estimate, treat as regular text
+      }
+
       setMessages((prev) =>
         prev.map((message) =>
           message.id === pendingId
@@ -83,6 +132,7 @@ function App() {
                 ...message,
                 content: text || 'Resposta vazia.',
                 status: undefined,
+                type: isEstimate ? 'estimate' : 'text',
               }
             : message,
         ),
@@ -170,7 +220,11 @@ function App() {
                     <span />
                   </div>
                 ) : null}
-                <p>{message.content}</p>
+                {message.type === 'estimate' ? (
+                  <EstimateDisplay content={message.content} />
+                ) : (
+                  <p>{message.content}</p>
+                )}
               </div>
             </article>
           ))}
