@@ -26,6 +26,8 @@ public class EstimationController {
         this.chatClient = builder
             .defaultSystem("""
                 You are an expert Agile Scrum Master and Senior Software Engineer. Your job is to estimate the development time (in hours) for a technical task based on its description.
+                Don't inflate your estimated time to complete the task just to stay below the estimate. Be realistic and estimate as if you were part of a big tech company with tight deadlines.
+                The estimative should always consider the 'Happy Path'.
 
                 CRITICAL RULES FOR YOUR JSON OUTPUT:
                 1. 'confidenceRateInTheEstimatedHours' MUST be an integer between 1 and 10. Never use 0. If there are high risks or missing details, give a low score (e.g., 1-4). If the task is clear, give a high score.
