@@ -15,5 +15,8 @@ public record EstimativeResponse (
     List<String> riskFactorsThatMayAffectTheTimeToCompleteTheTask,
 
     @JsonPropertyDescription("Justificativa detalhada sobre o motivo da quantidade de horas estimadas para conclusão da tarefa, do índice de confiança e dos fatores de risco")
-    String justification
+    String justification,
+
+    @JsonPropertyDescription("Lista de exemplos passadas no prompt para analise de estimativa, seguido da estimativa (ENUM)")
+    List<String> similarTasks
 ) {}

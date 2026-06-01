@@ -52,7 +52,7 @@ public class EstimationService {
         String sanitizedPrompt = this.sanitizer.sanitize("Estimate the hours needed to build this task: " + description);
         logger.info("Sanitized prompt: " + sanitizedPrompt);
 
-        return this.chatClient.prompt()
+        EstimativeResponse response = this.chatClient.prompt()
         .system(fullSystemPrompt)
         .options(OllamaChatOptions.builder()
                 .temperature(0.0)
@@ -61,6 +61,13 @@ public class EstimationService {
         .user(sanitizedPrompt)
         .call()
         .entity(EstimativeResponse.class);
+
+        return new EstimativeResponse(
+            response.estimatedHoursToCompleteTheTask(),
+            response.confidenceRateInTheEstimatedHours(),
+            response.riskFactorsThatMayAffectTheTimeToCompleteTheTask(),
+            response.justification(),
+            formatSimilarTasks(similarTasks));
     }
 
     private List<Task> getTop3Taks(String description) {
@@ -98,5 +105,17 @@ public class EstimationService {
         }
         
         return sb.toString();
+    }
+
+    private List<String> formatSimilarTasks(List<Task> tasks) {
+        return tasks.stream()
+                .map(task -> {
+                    String pokerSize = task.getEstimativeTime() != null ? task.getEstimativeTime().name() : "N/A";
+                    String projectName = task.getProjectName() != null ? task.getProjectName() : "Projeto não informado";
+                    String description = task.getDescription() != null ? task.getDescription() : "Descrição não informada";
+
+                    return projectName + " | " + description + " | Planning Poker: " + pokerSize;
+                })
+                .toList();
     }
 }
