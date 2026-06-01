@@ -9,3 +9,7 @@ spring:
           model: qwen2.5:0.5b
           think-option:
             enabled: false
+  elasticsearch:
+    uris: http://localhost:9200
+    username: elastic
+    password: changeme

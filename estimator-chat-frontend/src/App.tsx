@@ -13,6 +13,23 @@ interface ChatMessage {
   type?: 'text' | 'estimate'
 }
 
+type SimilarTask =
+  | string
+  | {
+      id?: string
+      projectName?: string
+      description?: string
+      estimativeTime?: string
+    }
+
+interface EstimatePayload {
+  estimatedHoursToCompleteTheTask?: number
+  confidenceRateInTheEstimatedHours?: number
+  riskFactorsThatMayAffectTheTimeToCompleteTheTask?: string[]
+  justification?: string
+  similarTasks?: SimilarTask[]
+}
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? ''
 const API_PATH = '/api/v1/estimator/estimate'
 
@@ -27,7 +44,7 @@ const createId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`
 
 function EstimateDisplay({ content }: { content: string }) {
   try {
-    const data = JSON.parse(content)
+    const data = JSON.parse(content) as EstimatePayload
     return (
       <div className="estimate-result">
         <div className="estimate-summary">
@@ -54,6 +71,35 @@ function EstimateDisplay({ content }: { content: string }) {
                 <li key={i}>{risk}</li>
               ))}
             </ul>
+          </div>
+        )}
+
+        {data.similarTasks?.length > 0 && (
+          <div className="estimate-similar-tasks">
+            <h4>Tarefas Similares</h4>
+            <div className="similar-tasks-list">
+              {data.similarTasks.map((task, index) => {
+                if (typeof task === 'string') {
+                  return (
+                    <article className="similar-task-card" key={`${task}-${index}`}>
+                      <p>{task}</p>
+                    </article>
+                  )
+                }
+
+                return (
+                  <article className="similar-task-card" key={task.id ?? `${index}`}>
+                    {task.projectName ? (
+                      <span className="similar-task-project">{task.projectName}</span>
+                    ) : null}
+                    <p>{task.description ?? 'Descrição indisponível.'}</p>
+                    {task.estimativeTime ? (
+                      <strong>Planning Poker: {task.estimativeTime}</strong>
+                    ) : null}
+                  </article>
+                )
+              })}
+            </div>
           </div>
         )}
       </div>
