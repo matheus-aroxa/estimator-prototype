@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.ai.chat.client.AdvisorParams;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.ollama.api.OllamaChatOptions;
+import org.springframework.ai.google.genai.GoogleGenAiChatOptions;
 import org.springframework.stereotype.Service;
 import com.tjpe.jus.br.estimator_prototype.configuration.PromptSanitizer;
 import com.tjpe.jus.br.estimator_prototype.dto.EstimativeResponse;
@@ -25,6 +25,7 @@ public class EstimationService {
         You are an expert Agile Scrum Master and Senior Software Engineer. Your job is to estimate the development time (in hours) for a technical task based on its description.
         Don't inflate your estimated time to complete the task just to stay below the estimate. Be realistic and estimate as if you were part of a big tech company with tight deadlines.
         The estimative should always consider the 'Happy Path'.
+        You should always answer in brazillian portuguese.
 
         You will be provided with historical examples of similar tasks. These examples include a 'Historical Planning Poker Size' using an enum notation (E0 (N/A), E1(1H), E2(3H), E3(1D), E5(1D-2D), E8(3D-5D), E13(6D-9D) and E21(10D-15D)).
         Use these historical poker sizes as a baseline benchmark to calibrate your understanding of complexity, and then calculate and extrapolate the final response strictly in HOURS.
@@ -43,18 +44,21 @@ public class EstimationService {
     public EstimativeResponse estimate(String description) {
         logger.info("Received request to estimate task with description: " + description);
 
-        List<Task> similarTasks = getTop3Taks(description);
+        String descricaoFormatada = description.replace("\r\n", "\\n").replace("\n", "\\n");
+
+        List<Task> similarTasks = getTop3Taks(descricaoFormatada);
 
         String fewShotExamples = formatFewShotExamples(similarTasks);
 
         String fullSystemPrompt = SYSTEM_PROMPT_BASE + "\n" + fewShotExamples;
 
         String sanitizedPrompt = this.sanitizer.sanitize("Estimate the hours needed to build this task: " + description);
+
         logger.info("Sanitized prompt: " + sanitizedPrompt);
 
         EstimativeResponse response = this.chatClient.prompt()
         .system(fullSystemPrompt)
-        .options(OllamaChatOptions.builder()
+        .options(GoogleGenAiChatOptions.builder()
                 .temperature(0.0)
                 .topP(0.1))
         .advisors(AdvisorParams.ENABLE_NATIVE_STRUCTURED_OUTPUT)
