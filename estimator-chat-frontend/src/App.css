@@ -251,6 +251,109 @@
   animation-delay: 0.3s;
 }
 
+/* Estilos para a exibicao da estimativa */
+.estimate-result {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: var(--ink);
+}
+
+.estimate-summary {
+  display: flex;
+  gap: 20px;
+  background: var(--panel);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+
+.estimate-value, .estimate-confidence {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.estimate-value strong, .estimate-confidence strong {
+  font-size: 24px;
+  color: var(--accent-strong);
+}
+
+.estimate-value span, .estimate-confidence span {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.estimate-justification h4, .estimate-risks h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.estimate-justification p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.estimate-risks ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+}
+
+.estimate-risks li {
+  margin-bottom: 4px;
+}
+
+.estimate-similar-tasks h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.similar-tasks-list {
+  display: grid;
+  gap: 10px;
+}
+
+.similar-task-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, #fff 0%, #faf7f2 100%);
+}
+
+.similar-task-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+
+.similar-task-card strong {
+  font-size: 12px;
+  color: var(--accent-strong);
+}
+
+.similar-task-project {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-strong);
+}
+
 .composer {
   display: grid;
   gap: 12px;

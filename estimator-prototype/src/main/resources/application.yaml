@@ -2,10 +2,13 @@ spring:
   application:
     name: estimator-prototype
   ai:
-    ollama:
-      base-url: http://localhost:11434
-      chat:
-        options:
-          model: qwen2.5:0.5b
-          think-option:
-            enabled: false
+    google:
+      genai:
+        api-key: ${GEMINI_KEY:}
+        chat:
+          options:
+            model: gemini-2.5-flash
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URI:http://elasticsearch:9200}
+    username: ${ELASTICSEARCH_USERNAME:elastic}
+    password: ${ELASTICSEARCH_PASSWORD:changeme}
